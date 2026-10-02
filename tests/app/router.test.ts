@@ -16,6 +16,17 @@ describe('rutas hash', () => {
     expect(resolverRuta('#c/fgd', tema01)).toEqual({ vista: 'seccion', seccionId: '4.2A', conceptoFoco: 'fgd', scrollArriba: false });
   });
 
+  it('#examen abre la predicción de examen', () => {
+    expect(resolverRuta('#examen', tema01)).toEqual({ vista: 'examen', scrollArriba: true });
+    expect(resolverRuta('#examen', { ...tema01, ampliacion: undefined })).toEqual({ vista: 'inicio', scrollArriba: true });
+    expect(resolverRuta('#simulacro', tema01)).toEqual({ vista: 'simulacro', scrollArriba: true });
+    expect(resolverRuta('#repaso', tema01)).toEqual({ vista: 'repaso', scrollArriba: true });
+    expect(resolverRuta('#repaso', { ...tema01, ampliacion: undefined })).toEqual({ vista: 'inicio', scrollArriba: true });
+    expect(resolverRuta('#repaso/bde', tema01)).toEqual({ vista: 'repaso', conceptoId: 'bde', scrollArriba: true });
+    expect(resolverRuta('#repaso/nada', tema01)).toEqual({ vista: 'inicio', scrollArriba: true });
+    expect(resolverRuta('#visual', tema01)).toEqual({ vista: 'visual', scrollArriba: true });
+  });
+
   it('ids desconocidos llevan al inicio', () => {
     expect(resolverRuta('#s/9.9', tema01)).toEqual({ vista: 'inicio', scrollArriba: true });
     expect(resolverRuta('#c/nada', tema01)).toEqual({ vista: 'inicio', scrollArriba: false });

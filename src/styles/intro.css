@@ -1,0 +1,88 @@
+/* Intro: tráiler de títulos a pantalla completa, antes del mapa (ver `ui/intro/introCinematica.ts`).
+   Una única línea de tiempo con retrasos absolutos; solo se animan transform y opacity (las mueve
+   el compositor: no se congelan mientras la 3D se monta). Instantes en `GUION`. */
+
+.intro{--oro:#e8b84a;--tinta:#f3eee4;--tinta2:#b9b1a3;--display:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif;
+  position:fixed;inset:0;z-index:1000;overflow:hidden;color:var(--tinta);
+  background:radial-gradient(ellipse 90% 70% at 50% 45%,#221d18 0%,#0d0b09 70%,#050403 100%);
+  transition:opacity .6s ease .3s}
+body.intro-activa{overflow:hidden}
+/* Lo que hay debajo (la portada) no compite con la intro mientras dura. */
+.intro-activa .mundo-barra,.intro-activa .mundo-etiquetas,.intro-activa .ficha,.intro-activa .portada-marca,.intro-activa .portada-pista{opacity:0;pointer-events:none}
+
+.intro-escena{position:absolute;inset:0;transition:transform .9s cubic-bezier(.5,0,.75,0),opacity .7s ease-in}
+.intro-escena>*{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;padding:0 max(16px,6vw);text-align:center;opacity:0}
+.intro .pal{display:inline-block;white-space:nowrap}
+
+/* 1 · Apertura: línea dorada y la asignatura letra a letra. */
+.intro-apertura{gap:14px;animation:acto .1s linear 0s both,acto-sale .35s ease-in 1s forwards}
+.intro-linea{display:block;width:min(220px,50vw);height:2px;background:linear-gradient(90deg,transparent,var(--oro),transparent);transform:scaleX(0);animation:linea .7s cubic-bezier(.2,.7,.2,1) .15s forwards}
+.intro-ante{margin:0;font-weight:700;font-size:clamp(.8rem,2.6vw,1.05rem);letter-spacing:.42em;color:var(--tinta)}
+.intro-ante .l{display:inline-block;opacity:0;animation:letra-entra .5s cubic-bezier(.2,.8,.3,1) calc(.3s + var(--i) * 35ms) both}
+
+/* 2 · Título sobre el horizonte de la ciudad (Ken Burns: el horizonte se desplaza y se acerca). */
+.intro-titulo{animation:titulo-entra .8s cubic-bezier(.2,.75,.25,1) 1.1s both,acto-sale-grande .4s ease-in 2.75s forwards}
+.intro-titulo .marca{position:relative;z-index:1;filter:drop-shadow(0 6px 22px rgba(0,0,0,.7))}
+.intro-titulo .marca-ante{display:none}
+.intro .marca-l{animation-delay:calc(var(--i) * 45ms + 1.15s),calc(var(--i) * 45ms + 3s)}
+.intro-horizonte{position:absolute;left:0;right:0;bottom:6vh;height:34vh;overflow:hidden;opacity:.55;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent);mask-image:linear-gradient(90deg,transparent,#000 15%,#000 85%,transparent)}
+.intro-horizonte .sk-ed>rect:first-of-type,.intro-horizonte .sk-ed>path:not(.sk-andamio):not(.sk-bandera),.intro-horizonte .sk-ed>rect:not([class]){fill:#241e18;stroke:var(--c);stroke-dasharray:none;opacity:1}
+.intro-horizonte .sk-suelo{stroke:rgba(232,184,74,.4)}
+.intro-horizonte svg{display:block;height:100%;width:auto;max-width:none;transform-origin:0 100%;animation:horizonte 3.2s linear 1s both}
+
+/* 3 · Un plano por apartado: entra desde la derecha, se acerca y sale por la izquierda. */
+.intro-plano{gap:6px;animation:plano 1s cubic-bezier(.45,.05,.55,.95) calc(3s + var(--k) * .85s) both}
+.intro-num{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(4rem,22vw,9rem);line-height:.9;color:var(--c)}
+.intro-apartado{margin:0;max-width:16ch;font-family:var(--display);font-weight:800;font-size:clamp(1.7rem,7vw,3.4rem);line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+.intro-iconos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;max-width:min(520px,86vw);margin-bottom:14px}
+.intro-iconos i{display:block;width:clamp(36px,10vw,54px);opacity:0;animation:icono .9s cubic-bezier(.2,.8,.3,1) calc(3.05s + var(--k) * .85s + var(--j) * 40ms) both}
+.intro-iconos svg{display:block;width:100%;height:auto}
+
+/* 4 · Final: morph letra a letra, Ken Burns lento y subtítulo palabra a palabra. */
+.intro-final{gap:20px;animation:acto .3s ease 6.3s both,ken-burns 4.5s ease-out 6.3s both}
+.intro-morph{display:grid}
+.intro-morph>*{grid-area:1/1;margin:0;font-family:var(--display);font-weight:800;font-size:clamp(2.1rem,9vw,5.2rem);line-height:1.02;letter-spacing:-.025em;max-width:16ch;text-wrap:balance}
+.intro-morph .m-a{color:var(--tinta)}
+.intro-morph .m-b{color:var(--oro)}
+.intro .la,.intro .lb{display:inline-block}
+.intro .la{animation:letra-entra .35s ease-out calc(6.3s + var(--i) * 18ms) both,letra-sale .45s cubic-bezier(.5,0,.75,0) calc(6.9s + var(--i) * 22ms) forwards}
+.intro .lb{animation:letra-llega .5s cubic-bezier(.2,.8,.3,1.2) calc(7.05s + var(--i) * 22ms) both}
+.intro-sub{margin:0;max-width:34ch;font-size:clamp(.78rem,2.8vw,1.02rem);font-weight:700;letter-spacing:.2em;text-transform:uppercase;line-height:1.7;color:var(--tinta2)}
+.intro-sub span{display:inline-block;animation:palabra-entra .55s cubic-bezier(.2,.8,.3,1) calc(8s + var(--i) * 90ms) both}
+/* Si la 3D aún no está, el plano final respira. */
+.intro.espera .intro-morph{animation:respira 1.8s ease-in-out infinite}
+/* Salida: el texto vuela hacia la cámara y la capa se funde sobre el mapa. */
+.intro.fuera{opacity:0;pointer-events:none}
+.intro.fuera .intro-escena{transform:scale(1.6);opacity:0}
+
+.intro-saltar{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:2;cursor:pointer;border:1px solid rgba(243,238,228,.35);border-radius:999px;background:rgba(20,16,12,.55);color:var(--tinta);padding:8px 14px;font:inherit;font-size:.78rem;font-weight:700;letter-spacing:.08em}
+
+@keyframes acto{from{opacity:0}to{opacity:1}}
+@keyframes acto-sale{from{opacity:1}to{opacity:0;transform:translateY(-18px) scale(.94)}}
+@keyframes acto-sale-grande{from{opacity:1}to{opacity:0;transform:scale(1.18)}}
+@keyframes linea{to{transform:scaleX(1)}}
+@keyframes letra-entra{from{opacity:0;transform:translateY(.7em) scale(.7)}to{opacity:1;transform:none}}
+@keyframes titulo-entra{from{opacity:0;transform:scale(.72)}to{opacity:1;transform:none}}
+@keyframes horizonte{from{transform:translateX(0) scale(1)}to{transform:translateX(-28%) scale(1.12)}}
+@keyframes plano{
+  0%{opacity:0;transform:translateX(38vw) scale(.9)}
+  22%{opacity:1;transform:translateX(0) scale(1)}
+  78%{opacity:1;transform:translateX(-3vw) scale(1.04)}
+  100%{opacity:0;transform:translateX(-38vw) scale(1.12)}
+}
+@keyframes icono{from{opacity:0;transform:translateY(24px) scale(.5) rotate(-12deg)}to{opacity:1;transform:none}}
+@keyframes ken-burns{from{transform:scale(1)}to{transform:scale(1.06)}}
+@keyframes letra-sale{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-.6em) scale(1.5) rotate(-8deg)}}
+@keyframes letra-llega{from{opacity:0;transform:translateY(.6em) scale(.4) rotate(10deg)}to{opacity:1;transform:none}}
+@keyframes palabra-entra{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes respira{50%{transform:scale(1.03)}}
+
+@media (max-width:600px){
+  .intro-horizonte{height:19vh;bottom:12vh}
+  .intro-iconos{max-width:220px}
+}
+
+/* Botón para volver a ver la intro: una píldora propia en la pista de la portada. */
+.ver-intro{pointer-events:auto;cursor:pointer;border:1px solid rgba(232,184,74,.55);border-radius:999px;background:rgba(14,13,12,.6);padding:6px 14px;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--m-oro);text-shadow:none}
+.ver-intro:hover{color:#ffe7b0;border-color:#ffe7b0}

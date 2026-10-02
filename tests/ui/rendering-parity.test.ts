@@ -32,7 +32,17 @@ describe('paridad visual con el prototipo', () => {
     }
   });
 
-  it('ciudad pixel sin progreso y con progreso', () => {
+  it('ciudad pixel de la app: iconos en letreros sobre el tejado, no sobre la fachada', () => {
+    const svg = ciudadPixel(tema01, { dominio: {}, intentos: {} }, { iconosSobreTejado: true });
+    expect(svg).not.toBe(legacy.pixelCity());
+    // Ningún icono empieza por debajo del tejado de su edificio.
+    const iconos = [...svg.matchAll(/<svg x="[\d.]+" y="(-?[\d.]+)" width="16"/g)].map((m) => Number(m[1]));
+    expect(iconos).toHaveLength(12);
+    tema01.ciudad.edificios.forEach((e, i) => expect(iconos[i]! + 17).toBeLessThanOrEqual(110 - e.altura));
+    expect(Math.min(...iconos)).toBeGreaterThanOrEqual(0);
+  });
+
+  it('ciudad pixel sin progreso y con progreso (prototipo)', () => {
     expect(ciudadPixel(tema01, { dominio: {}, intentos: {} })).toBe(legacy.pixelCity());
     const dom = { bde: 1, bancos: 0.5, cajas: 0.25, fgd: 1, sgr: 0.5 };
     expect(ciudadPixel(tema01, { dominio: dom, intentos: {} })).toBe(motorLegacy({ dom, tries: {} }).pixelCity());

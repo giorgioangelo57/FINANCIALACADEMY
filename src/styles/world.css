@@ -1,0 +1,291 @@
+/*
+ * La Ciudad del Dinero · mundo de la portada (maqueta 3D, ficha contextual y Atlas).
+ * Composición: el mundo es el protagonista, a sangre dentro de la columna; la navegación es una
+ * línea fina encima; el Atlas, un índice editorial debajo. Sin tarjetas: filetes y tipografía.
+ * El oro solo señala (recomendación, acción, luz); los colores de dominio conservan su significado.
+ */
+.mundo{
+  --m-noche:#0e0d0c;
+  --m-tinta:#f3eee4;
+  --m-tinta2:#b9b1a3;
+  --m-tinta3:#7d766b;
+  --m-linea:rgba(243,238,228,.14);
+  --m-oro:#e8b84a;
+  --m-display:"Bricolage Grotesque","Atkinson Hyperlegible",system-ui,sans-serif;
+  margin:26px 0 8px;
+  background:var(--m-noche);
+  color:var(--m-tinta);
+  border-top:1px solid var(--m-linea);
+  border-bottom:1px solid var(--m-linea);
+}
+.mundo [hidden]{display:none!important}
+.skyline[hidden],.legend[hidden]{display:none}
+
+/* Navegación: ruta de lugares y tres acciones de texto. */
+.mundo-barra{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:12px 2px;min-width:0}
+/* Dos filas fijas: migas arriba y acciones debajo; cada una se desplaza en horizontal si no cabe. */
+.mundo-barra>nav{min-width:0}
+/* Acciones: botones en pastilla que pasan a otra línea si no caben (nunca quedan escondidos). */
+.mundo-acciones{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+.mundo-acciones::-webkit-scrollbar{display:none}
+.migas{display:flex;flex-wrap:nowrap;align-items:baseline;gap:0;margin:0;padding:0;list-style:none;font-size:.86rem;min-width:0;overflow-x:auto;scrollbar-width:none}
+.migas::-webkit-scrollbar{display:none}
+.migas li{flex:none;white-space:nowrap}
+.migas li+li::before{content:"/";color:var(--m-tinta3);margin:0 8px}
+.migas button{cursor:pointer;border:0;background:none;padding:2px 0;color:var(--m-tinta2);font:inherit;font-weight:700}
+.migas button:hover{color:var(--m-tinta)}
+.migas [aria-current]{color:var(--m-tinta)}
+.mb-btn{flex:none;white-space:nowrap;cursor:pointer;border:1px solid var(--m-linea);border-radius:999px;background:rgba(243,238,228,.05);color:var(--m-tinta);padding:6px 13px;font:inherit;font-size:.8rem;font-weight:700;letter-spacing:.02em;line-height:1.2;transition:background .15s,border-color .15s}
+.mb-btn:hover:not(:disabled){background:rgba(243,238,228,.12);border-color:var(--m-tinta3)}
+.mb-btn:focus-visible{outline:2px solid var(--m-oro);outline-offset:2px}
+.mb-btn:disabled{opacity:.4;cursor:default}
+.mb-btn[aria-pressed="true"]{background:rgba(232,184,74,.16);border-color:var(--m-oro);color:#ffe7b0}
+
+/* El mundo. */
+.mundo-vista{position:relative;height:clamp(380px,72vh,760px);background:radial-gradient(ellipse 85% 75% at 50% 45%,#3b3530 0%,#221e1b 55%,#100e0d 100%);overflow:hidden}
+.mundo-lienzo{display:block;width:100%;height:100%;touch-action:none;outline:none}
+
+
+/* Rótulos: texto de plano, sin caja ni cifras. Sombra solo para que se lea sobre la ciudad. */
+.mundo-etiquetas{position:absolute;inset:0;pointer-events:none}
+.m-etq{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;display:flex;gap:7px;align-items:baseline;white-space:nowrap;border:0;background:none;padding:2px 0;color:var(--m-tinta);font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;text-shadow:0 1px 2px rgba(0,0,0,.9),0 0 8px rgba(0,0,0,.6)}
+.m-etq .m-num{font-family:var(--m-display);font-weight:800;letter-spacing:0;font-size:1.05em}
+.m-etq.barrio{font-size:.8rem}
+.m-etq.barrio .m-num{font-size:1.6em;line-height:1}
+.m-etq.edificio{font-size:.68rem;letter-spacing:.08em;text-transform:none;font-weight:700;padding:2px 7px;border-radius:3px;background:rgba(14,13,12,.62);text-shadow:none}
+.m-etq.edificio.tenue{opacity:.55;font-size:.62rem}
+.m-etq.edificio.sobrevuelo{opacity:1;background:var(--m-tinta);color:var(--m-noche)}
+.m-etq.edificio:hover{background:rgba(14,13,12,.85);opacity:1}
+@media (max-width:600px){.m-etq.edificio{font-size:.6rem;padding:2px 5px}.m-etq.edificio.tenue{display:none}}
+.m-etq:hover .m-largo{text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--m-oro)}
+
+/* Ficha contextual: fuera del mundo, en la esquina; aparece al señalar o seleccionar. */
+.ficha{position:absolute;left:20px;bottom:20px;width:min(360px,calc(100% - 40px));padding:16px 20px 18px;background:rgba(14,13,12,.9);border-radius:3px;display:grid;gap:10px}
+.ficha.vistazo{pointer-events:none;background:rgba(14,13,12,.8)}
+.ficha-antetitulo{margin:0;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-tinta2)}
+.ficha-antetitulo.llamada{color:var(--m-oro)}
+.ficha-titulo{margin:0;font-family:var(--m-display);font-weight:800;font-size:1.45rem;line-height:1.05;letter-spacing:-.01em;text-wrap:balance}
+.ficha-titulo.grande{font-size:1.9rem}
+.ficha-datos{display:flex;flex-wrap:wrap;gap:6px 22px;padding-top:10px;border-top:1px solid var(--m-linea)}
+.ficha-cifra{display:grid;gap:2px}
+.ficha-cifra b{font-family:var(--m-display);font-weight:800;font-size:1.7rem;line-height:1;font-variant-numeric:tabular-nums}
+.ficha-cifra b small{font-size:.55em;margin-left:1px}
+.ficha-cifra span{display:flex;gap:6px;align-items:center;font-size:.74rem;color:var(--m-tinta2)}
+.ficha-muestra{width:8px;height:8px;flex:none;box-shadow:inset 0 0 0 1px var(--m-tinta3)}
+.ficha-accion{justify-self:start;color:var(--m-tinta);font-weight:700;text-decoration:none;border-bottom:2px solid var(--m-oro);padding-bottom:2px}
+.ficha-accion::after{content:" →"}
+.ficha-accion:hover{color:var(--m-oro)}
+.ficha-pista{margin:0;font-size:.74rem;color:var(--m-tinta3)}
+
+.mundo-aviso{margin:0;padding:12px 2px;color:var(--m-tinta2);font-size:.92rem;border-bottom:1px solid var(--m-linea)}
+
+/* Atlas: índice editorial del nivel actual. */
+.atlas{padding:28px 2px 8px}
+.atlas-cab{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 32px;align-items:end;padding-bottom:18px;border-bottom:1px solid var(--m-linea)}
+.atlas-tit{min-width:0;display:grid;gap:6px}
+.atlas-nivel{margin:0;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-tinta2)}
+.atlas-tit h3{font-family:var(--m-display);font-weight:800;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;letter-spacing:-.02em;text-wrap:balance}
+.atlas-cifras{display:flex;gap:28px}
+.atlas-cifras div{display:grid;gap:4px;max-width:9em}
+.atlas-cifras b{font-family:var(--m-display);font-weight:800;font-size:2.3rem;line-height:.9;font-variant-numeric:tabular-nums}
+.atlas-cifras span{font-size:.74rem;color:var(--m-tinta2);line-height:1.3}
+.atlas-ires{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:22px}
+.atlas-ir{color:var(--m-tinta);font-weight:700;text-decoration:none;border-bottom:2px solid var(--m-oro);padding-bottom:2px}
+.atlas-ir::after{content:" →"}
+.atlas-ir:hover{color:var(--m-oro)}
+.atlas-ir.sec{border-bottom-color:var(--m-tinta3)}
+.atlas-estado{display:inline-flex;gap:7px;align-items:center;font-size:.78rem;font-weight:700;color:var(--m-tinta2)}
+.atlas-estado i{width:9px;height:9px;flex:none;box-shadow:inset 0 0 0 1px var(--m-tinta3)}
+
+.atlas-lista{list-style:none;margin:0;padding:0}
+.atlas-item{cursor:pointer;width:100%;display:grid;grid-template-columns:4.2rem minmax(0,1fr) 8.5rem 6.5rem;gap:4px 18px;align-items:center;text-align:left;background:none;border:0;border-bottom:1px solid var(--m-linea);color:var(--m-tinta);padding:14px 2px;font:inherit}
+.atlas-item:hover{background:rgba(243,238,228,.04)}
+.atlas-item:hover .atlas-nombre{text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--m-oro);text-decoration-thickness:2px}
+.atlas-clave{font-family:var(--m-display);font-weight:800;font-size:1.35rem;color:var(--m-tinta2);font-variant-numeric:tabular-nums}
+.atlas-nombre{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;font-weight:700;font-size:1rem;line-height:1.3;min-width:0}
+.atlas-prio{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--m-oro)}
+.atlas-peso,.atlas-dominio{display:grid;grid-template-columns:auto 1fr;column-gap:5px;align-items:baseline}
+.atlas-peso b,.atlas-dominio b{font-family:var(--m-display);font-weight:800;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.atlas-peso small,.atlas-dominio small{font-size:.7rem;color:var(--m-tinta2)}
+.atlas-dominio small+small{grid-column:1/-1}
+.atlas-peso>i{grid-column:1/-1;display:block;height:2px;background:var(--m-linea);margin-top:5px}
+.atlas-peso>i>i{display:block;height:100%;background:var(--m-tinta2)}
+
+/* Historia visual (microexperiencia HTML). */
+.historia{margin-top:22px;padding:18px 0;border-top:1px solid var(--m-linea)}
+.historia h4{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-tinta2);margin-bottom:12px}
+.h-cadena{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0;padding:0;list-style:none}
+.h-ent{border-bottom:2px solid var(--m-linea);padding:4px 2px;font-family:var(--m-display);font-weight:800;font-size:1.1rem;color:var(--m-tinta2);transition:color .3s,border-color .3s}
+.h-ent.on{color:var(--m-tinta);border-bottom-color:var(--m-oro)}
+.h-flu{display:flex;flex-direction:column;align-items:center;color:var(--m-tinta3);font-weight:800;font-size:1.1rem;line-height:1}
+.h-flu small{font-size:.68rem;font-weight:700}
+.h-flu.on{color:var(--m-oro)}
+.h-paso{margin:14px 0 12px;font-size:1rem;color:var(--m-tinta)}
+.h-paso a{color:var(--m-tinta);font-weight:700;border-bottom:2px solid var(--m-oro);text-decoration:none}
+.h-ctrl{display:flex;gap:18px}
+
+/* Cómo leer la ciudad: cuatro claves en columnas. */
+.mundo-leyenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 26px;margin:0;padding:22px 2px 24px;border-top:1px solid var(--m-linea)}
+.mundo-leyenda div{display:grid;gap:3px;min-width:0}
+.mundo-leyenda dt{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-tinta2)}
+.mundo-leyenda dd{margin:0;font-size:.86rem;line-height:1.45;color:var(--m-tinta)}
+
+@media (max-width:700px){
+  .atlas-cab{grid-template-columns:1fr}
+  .atlas-cifras{gap:20px}
+  .atlas-item{grid-template-columns:3rem minmax(0,1fr) 5.5rem;padding:12px 0}
+  .atlas-peso{display:none}
+}
+@media (max-width:600px){
+  .mundo-vista{height:56vh}
+  .m-largo{display:none}
+  .ficha{left:8px;right:8px;bottom:8px;width:auto;padding:10px 12px 12px;gap:6px}
+  .ficha-titulo,.ficha-titulo.grande{font-size:1.1rem}
+  .ficha-cifra b{font-size:1.15rem}
+  /* En móvil la ficha no tapa el mapa: título, estado breve y acción. */
+  .ficha-datos{padding-top:6px;gap:4px 16px}
+  .ficha-datos .ficha-cifra:nth-child(n+3),.ficha-pista{display:none}
+}
+
+/*
+ * Portada (landing): el mapa a pantalla completa es lo primero que se ve. Sin interfaz encima: solo
+ * la ciudad y una pista. Un clic entra en la exploración (aparecen la ruta, la ficha y el Atlas).
+ */
+.mundo.portada>:not(.mundo-vista){display:none!important}
+.mundo.portada .ficha{display:none!important}
+.mundo.portada .mundo-lienzo{cursor:pointer}
+.mundo.portada{margin-top:0;border-top:0}
+.mundo.portada .mundo-vista{height:calc(100svh - var(--alto-topbar,0px))}
+.portada-pista{display:none}
+.mundo.portada .portada-pista{display:flex;position:absolute;left:0;right:0;bottom:22px;justify-content:center;gap:28px;margin:0;pointer-events:none;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--m-tinta);text-shadow:0 1px 3px rgba(0,0,0,.85);animation:pista 1.2s 1s ease both}
+.portada-pista span:last-child{color:var(--m-tinta2)}
+.portada-pista span:last-child::before{content:"↓ "}
+@keyframes pista{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Inmersión: mientras el mapa domina la pantalla, la barra lateral se retira y el mundo va a sangre. */
+@media (min-width:1001px){
+  .rail{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+  main{transition:margin-left .5s cubic-bezier(.2,.8,.2,1)}
+  body.portada-inmersiva .rail{transform:translateX(-102%)}
+  /* Con la barra retirada, el botón flotante la abre como capa. */
+  body.portada-inmersiva.menu .rail{transform:none;box-shadow:0 0 0 100vmax rgba(0,0,0,.6)}
+  body.portada-inmersiva .indice-flotante{display:inline-flex}
+  body.portada-inmersiva main{margin-left:0}
+}
+body.portada-inmersiva{overflow-x:clip}
+body.portada-inmersiva .mundo{width:100vw;margin-left:calc(50% - 50vw)}
+.page:has(>.mundo:first-child){padding-top:0}
+@media (max-width:1000px){:root{--alto-topbar:49px}}
+@media (max-width:600px){.mundo.portada .portada-pista{flex-direction:column;align-items:center;gap:6px;padding:0 16px;text-align:center;letter-spacing:.1em}}
+.page>.mundo:first-child{margin-top:0;border-top:0}
+body.portada-inmersiva .mundo>:not(.mundo-vista){padding-inline:max(16px,calc(50vw - 450px))}
+
+/* Paseo con el personaje. */
+.paseo-pista{display:none}
+.mundo.paseando .paseo-pista{display:flex;position:absolute;top:14px;left:0;right:0;justify-content:center;gap:22px;margin:0;pointer-events:none;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--m-tinta2);text-shadow:0 1px 3px rgba(0,0,0,.85)}
+.paseo-pista b{color:var(--m-tinta);letter-spacing:.06em}
+.mundo.paseando .mundo-etiquetas{display:none}
+/* Paseo táctil: joystick a la izquierda; saltar y entrar a la derecha (solo con puntero grueso). */
+.paseo-tactil{display:none}
+@media (pointer:coarse){
+  .mundo.paseando .paseo-pista{display:none}
+  .mundo.paseando .paseo-tactil{display:flex;position:absolute;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));justify-content:space-between;align-items:flex-end;padding:0 18px;pointer-events:none;z-index:4}
+}
+.joy{position:relative;width:118px;height:118px;border-radius:50%;background:rgba(14,13,12,.45);border:2px solid var(--m-linea);pointer-events:auto;touch-action:none;backdrop-filter:blur(4px)}
+.joy-pomo{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:var(--m-tinta);box-shadow:0 3px 10px rgba(0,0,0,.5);transition:transform .12s}
+.joy.activo .joy-pomo{transition:none}
+.joy-botones{display:flex;gap:12px;pointer-events:auto}
+.joy-btn{display:grid;place-items:center;width:70px;height:70px;border-radius:50%;border:2px solid var(--m-linea);background:rgba(14,13,12,.6);color:var(--m-tinta);font-size:1.4rem;line-height:1;touch-action:manipulation;cursor:pointer}
+.joy-btn small{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.joy-btn:active,.joy-btn.pulsado{background:var(--m-oro);color:var(--m-noche)}
+.joy-btn{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.joy-btn[data-paseo-entrar]:disabled{opacity:.35}
+
+/* Pantalla completa del mapa (API nativa o capa de reserva). */
+.mundo:fullscreen,.mundo.pantalla-completa{display:flex;flex-direction:column;width:100vw!important;height:100vh;margin:0!important;border:0;background:var(--m-noche)}
+.mundo.pantalla-completa{position:fixed;inset:0;z-index:100}
+.mundo.en-pantalla-completa>:not(.mundo-barra):not(.mundo-vista){display:none!important}
+.mundo.en-pantalla-completa .mundo-barra{padding-inline:20px}
+.mundo.en-pantalla-completa .mundo-vista{flex:1;height:auto!important;min-height:0}
+body:has(.mundo.pantalla-completa){overflow:hidden}
+
+/* Pista de zoom (aparece una vez al usar la rueda sobre el mapa con el zoom desactivado). */
+.pista-zoom{position:absolute;left:50%;top:14px;transform:translateX(-50%);margin:0;padding:6px 14px;background:rgba(14,13,12,.88);border-radius:3px;font-size:.78rem;font-weight:700;color:var(--m-tinta);pointer-events:none;white-space:nowrap}
+
+/* Botón flotante del índice (escritorio, portada inmersiva). */
+.indice-flotante{display:none;position:fixed;left:16px;top:calc(14px + env(safe-area-inset-top,0px));z-index:35;align-items:center;gap:6px;cursor:pointer;border:1px solid var(--m-linea);border-radius:999px;padding:6px 14px;background:rgba(14,13,12,.78);color:var(--m-tinta);font:inherit;font-size:.8rem;font-weight:700;letter-spacing:.04em;backdrop-filter:blur(6px)}
+.indice-flotante:hover{background:rgba(14,13,12,.95)}
+body.menu .indice-flotante{display:none!important}
+
+/* Título de marca sobre el mapa de la portada (letras de moneda, ver brand.css). */
+.portada-marca{display:none}
+.mundo.portada .portada-marca{display:flex;justify-content:center;position:absolute;left:16px;right:16px;top:7%;z-index:2;pointer-events:none;filter:drop-shadow(0 4px 18px rgba(0,0,0,.65))}
+.brand .brand-ante{display:block;font-size:.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--y)}
+
+/* Barra del mundo en pantallas estrechas: migas en una fila y acciones en otra, sin saltos de línea. */
+@media (max-width:760px){
+  /* En móvil solo el nivel actual: para subir está "Subir de nivel". */
+  .migas li:not(:last-child){display:none}
+  .migas li:last-child::before{display:none}
+}
+@media (pointer:coarse){[data-mundo-zoom]{display:none}}
+.ficha{z-index:2}
+.mundo-etiquetas{z-index:1}
+
+/* Etiquetas de la barra: largas en pantallas anchas, cortas (icono + palabra) en móvil. */
+.mb-corto{display:none}
+@media (max-width:760px){
+  .mb-largo{display:none}
+  .mb-corto{display:inline}
+  .mundo-acciones{gap:6px}
+  .mb-btn{padding:7px 11px;font-size:.78rem}
+}
+
+/* Portada: las acciones flotan sobre el mapa (sin migas), encima de la pista. */
+.mundo{position:relative}
+.mundo.portada>.mundo-barra{display:block!important;position:absolute;left:16px;right:16px;bottom:58px;z-index:4;padding:0;pointer-events:none}
+.mundo.portada>.mundo-barra>nav,.mundo.portada [data-mundo-subir],.mundo.portada [data-mundo-zoom]{display:none!important}
+.mundo.portada .mundo-acciones{justify-content:center;pointer-events:auto}
+.mundo.portada .mb-btn{background:rgba(14,13,12,.72);backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.mundo.portada .mb-btn:hover:not(:disabled){background:rgba(14,13,12,.9)}
+@media (max-width:600px){.mundo.portada>.mundo-barra{bottom:132px}}
+
+/* Ambiente: día (por defecto), atardecer y noche. El cielo es el fondo del visor; la niebla de la
+   escena 3D usa el mismo color de borde para que la maqueta se funda con él. */
+.mundo-vista{transition:background .8s ease}
+.mundo[data-ambiente="atardecer"] .mundo-vista{background:radial-gradient(ellipse 85% 75% at 50% 45%,#5a3a3a 0%,#2b1d22 58%,#120c10 100%)}
+.mundo[data-ambiente="noche"] .mundo-vista{background:radial-gradient(ellipse 85% 75% at 50% 45%,#1b2746 0%,#0b1020 58%,#05070e 100%)}
+.mundo-vista::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .8s ease;background:radial-gradient(1.5px 1px at 51% 7%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1.5px at 75% 8%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1px at 12% 56%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1px 1px at 12% 55%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1px at 81% 8%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(2px 1px at 29% 6%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1.5px at 54% 19%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1.5px at 72% 24%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1.5px at 13% 9%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1px at 64% 69%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1.5px 2px at 75% 59%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1.5px 1px at 24% 32%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1.5px 2px at 44% 58%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1px 1px at 66% 54%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1.5px 1px at 63% 54%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1.5px at 44% 45%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(2px 2px at 9% 12%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(2px 1px at 8% 40%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(2px 1.5px at 92% 50%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1.5px 1px at 60% 46%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 2px at 8% 28%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1px 1px at 51% 51%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1px 1px at 58% 52%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1.5px 1px at 56% 36%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(2px 1.5px at 88% 49%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1px at 23% 20%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1px at 63% 24%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1.5px 1px at 19% 54%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1.5px 1.5px at 17% 66%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 2px at 88% 51%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(2px 2px at 14% 62%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(2px 1px at 25% 9%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(2px 1px at 15% 44%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1px at 1% 20%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1.5px at 79% 4%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 2px at 20% 33%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(1.5px 2px at 16% 15%,rgba(235,240,255,.7) 50%,transparent 100%),radial-gradient(2px 2px at 62% 40%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1px at 96% 44%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1.5px 2px at 89% 21%,rgba(235,240,255,.5) 50%,transparent 100%),radial-gradient(1px 1px at 68% 47%,rgba(235,240,255,.9) 50%,transparent 100%),radial-gradient(1px 1.5px at 83% 12%,rgba(235,240,255,.5) 50%,transparent 100%)}
+.mundo[data-ambiente="noche"] .mundo-vista::before{opacity:1;animation:titilar 6s ease-in-out infinite alternate}
+.mundo[data-ambiente="atardecer"] .mundo-vista::before{opacity:.25}
+@keyframes titilar{from{opacity:.75}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.mundo[data-ambiente="noche"] .mundo-vista::before{animation:none}}
+
+/* Modo noche (repaso): rótulos con lo pendiente y ficha con los edificios encendidos. */
+.m-etq.edificio.pendiente{opacity:1;background:rgba(20,24,38,.88);box-shadow:inset 0 0 0 1px rgba(255,210,122,.55);color:#ffe7b0}
+.m-etq.edificio.pendiente.sorpresa{box-shadow:inset 0 0 0 1px rgba(255,90,74,.8)}
+.m-pend{display:inline-grid;place-items:center;min-width:1.4em;height:1.4em;margin-left:4px;padding:0 5px;border-radius:999px;background:#ffd27a;color:#1b1406;font-size:.92em;font-variant-numeric:tabular-nums}
+.sorpresa .m-pend{background:#ff5a4a;color:#fff}
+.ficha-texto{margin:0;font-size:.9rem;line-height:1.45;color:var(--m-tinta2)}
+button.ficha-accion{cursor:pointer;background:none;border-top:0;border-left:0;border-right:0;font:inherit;font-weight:700;padding:0 0 2px}
+.ficha-pendientes{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.ficha-pend{width:100%;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer;border:0;border-radius:3px;background:rgba(255,210,122,.08);color:var(--m-tinta);font:inherit;font-size:.82rem;font-weight:700;padding:6px 8px;text-align:left}
+.ficha-pend:hover{background:rgba(255,210,122,.18)}
+.ficha-pend b{flex:none;min-width:1.6em;text-align:center;border-radius:999px;background:#ffd27a;color:#1b1406;font-variant-numeric:tabular-nums}
+.ficha-pend[data-sorpresa] b{background:#ff5a4a;color:#fff}
+@media (max-width:640px){.ficha-pendientes li:nth-child(n+4){display:none}}
+
+/* Recorrido guiado: rótulos numerados y ficha con anterior/siguiente. */
+.m-paso{display:inline-grid;place-items:center;min-width:1.5em;height:1.5em;margin-right:2px;border-radius:999px;background:#ffd23f;color:#1b1406;font-variant-numeric:tabular-nums}
+.m-etq.edificio.paso:not(.tenue){box-shadow:inset 0 0 0 1px rgba(255,210,63,.8);opacity:1}
+.m-etq.edificio.paso.tenue .m-paso{background:rgba(255,210,63,.55)}
+.rec-puntos{display:flex;flex-wrap:wrap;gap:4px}
+.rec-puntos i{width:8px;height:8px;border-radius:50%;background:var(--m-linea)}
+.rec-puntos i.hecho{background:rgba(255,210,63,.5)}
+.rec-puntos i.on{background:#ffd23f;box-shadow:0 0 0 3px rgba(255,210,63,.25)}
+.rec-ctrl{display:flex;gap:8px}
+.rec-btn{flex:1;cursor:pointer;border:1px solid var(--m-linea);border-radius:999px;background:rgba(243,238,228,.06);color:var(--m-tinta);font:inherit;font-size:.86rem;font-weight:700;padding:8px 12px}
+.rec-btn.principal{background:#ffd23f;border-color:#ffd23f;color:#1b1406}
+.rec-btn:disabled{opacity:.35;cursor:default}
+.rec-pie{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.rec-salir{cursor:pointer;border:0;background:none;color:var(--m-tinta3);font:inherit;font-size:.78rem;text-decoration:underline;padding:0}

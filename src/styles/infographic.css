@@ -1,0 +1,59 @@
+/* Infografías animadas paso a paso (ver ui/components/infographic.ts). */
+.ab.v{background:linear-gradient(90deg,#ffd23f,#ff8a3d)}
+.pn.v{background:#120f08;border:1px solid #ffd23f55;padding:12px}
+.ig{margin:0}
+.ig-titulo{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:1.1rem;margin:2px 4px 10px}
+.ig-lienzo{position:relative;aspect-ratio:16/10;width:100%;border-radius:16px;overflow:hidden;
+  background:radial-gradient(ellipse 80% 70% at 50% 45%,#1d1b17 0%,#0b0a09 100%);border:1px solid #2b2b2b;
+  background-image:radial-gradient(#ffffff0d 1px,transparent 1px),radial-gradient(ellipse 80% 70% at 50% 45%,#1d1b17 0%,#0b0a09 100%);background-size:18px 18px,100% 100%}
+.ig-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.ig-grupo{position:absolute;border:2px dashed #ffffff22;border-radius:18px;opacity:0;transition:opacity .5s,border-color .5s,background .5s}
+.ig-grupo.visible{opacity:1}
+.ig-grupo.activo{border-color:#ffd23f99;background:#ffd23f0d}
+.ig-grupo span{position:absolute;left:12px;top:6px;font-size:.72rem;font-weight:700;color:#ffd23f;letter-spacing:.02em}
+.ig-actor{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2px;width:max-content;max-width:23%;text-align:center;opacity:.18;transition:opacity .45s,transform .45s;z-index:2}
+.ig-actor.visto{opacity:.6}
+.ig-actor.activo{opacity:1;transform:translate(-50%,-50%) scale(1.06)}
+.ig-icono{display:grid;place-items:center;width:clamp(38px,6.5vw,58px);height:clamp(38px,6.5vw,58px);border-radius:50%;background:#1b1b1b;border:2px solid #3a3a3a;font-size:clamp(1.1rem,2.6vw,1.7rem);line-height:1;transition:border-color .45s,box-shadow .45s}
+.ig-actor.activo .ig-icono{border-color:#ffd23f;box-shadow:0 0 0 4px #ffd23f22,0 0 24px #ffd23f33}
+.ig-nombre{font-size:clamp(.6rem,1.35vw,.8rem);font-weight:700;line-height:1.15;color:#f3eee4;text-shadow:0 1px 2px #000}
+.ig-flecha{fill:none;stroke-width:2.5;stroke-linecap:round;transition:opacity .4s}
+.ig-flecha.pasado{opacity:.28}
+.ig-flecha.activo{stroke-width:3.5;stroke-dasharray:9 7;animation:ig-flujo 1s linear infinite}
+.ig-flecha.prohibido{stroke-dasharray:4 6}
+.ig-prohibido.pasado{opacity:.35}
+@keyframes ig-flujo{to{stroke-dashoffset:-16}}
+.ig-token{filter:drop-shadow(0 0 6px #0009)}
+.ig-etiquetas{position:absolute;inset:0;pointer-events:none;z-index:3}
+.ig-etq{position:absolute;transform:translate(-50%,-50%);max-width:30%;padding:2px 8px;border-radius:999px;background:#0b0a09e6;border:1px solid var(--c);color:#f3eee4;font-size:clamp(.56rem,1.2vw,.74rem);font-weight:700;line-height:1.2;text-align:center;transition:opacity .4s}
+.ig-etq.pasado{opacity:.35}
+.ig-texto{margin:12px 4px 0;min-height:3.2em;font-size:1rem;line-height:1.5}
+.ig-texto b{color:#ffd23f}
+.ig-ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 4px 0}
+.ig-puntos{display:flex;gap:6px;margin:0 4px}
+.ig-punto{width:12px;height:12px;border-radius:50%;border:0;background:#3a3a3a;cursor:pointer;padding:0}
+.ig-punto.on{background:#ffd23f}
+.ig-play{margin-left:auto}
+.ig-ley{display:flex;flex-wrap:wrap;gap:4px 14px;list-style:none;margin:10px 4px 2px;padding:0;font-size:.76rem;color:var(--mut)}
+.ig-ley i{display:inline-grid;place-items:center;width:16px;height:16px;margin-right:6px;border-radius:50%;background:var(--c);color:#000;font-style:normal;font-weight:800;font-size:.62rem;vertical-align:-3px}
+
+/* Galería */
+.vis-indice{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.vis-indice a{font-size:.85rem;color:#fff;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--bg2)}
+.vis-indice a:hover{border-color:#ffd23f}
+.vis-item{margin-top:28px;padding:16px;border-radius:24px;background:var(--bg2);border:1px solid var(--line);scroll-margin-top:80px}
+.vis-fichas{margin:10px 4px 0;font-size:.88rem;color:var(--mut)}
+.vis-fichas a{color:var(--c)}
+
+/* Móvil: lienzo más alto para que quepan los nombres. */
+@media (max-width:600px){
+  .ig-lienzo{aspect-ratio:4/5}
+  .ig-actor{max-width:30%}
+  .ig-etq{max-width:40%}
+  .pn.v{padding:8px}
+  .vis-item{padding:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .ig-flecha.activo{animation:none;stroke-dasharray:none}
+  .ig-actor,.ig-grupo,.ig-flecha,.ig-etq{transition:none}
+}

@@ -18,3 +18,6 @@
 main{margin-left:300px;min-height:100vh}
 .topbar{display:none}
 .page{max-width:900px;margin:0 auto;padding:42px 30px 90px}
+
+/* Corrección: nada provoca desplazamiento horizontal de la página (gráficos con desborde visible). */
+body{overflow-x:clip}

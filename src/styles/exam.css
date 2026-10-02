@@ -1,0 +1,137 @@
+/* Predicción de examen: reparto, mapa (treemap), gráficos de barras, tabla y fichas con simulacro. */
+.ex{position:relative;
+  --ex-of:#16a34a;--ex-pr:#3b82f6; /* validadas (dataviz) sobre #111 */
+  --ex-sup:#151515;--ex-borde:#262626;
+}
+.sl.exn{border:1px solid #ffd23f55;margin:2px 0 6px}
+.sl.exn .id{min-width:1.6em}
+.sl.exn .ex-sub{display:block;margin-left:2.3em;font-size:.75rem;opacity:.7}
+.sl.exn.on{border-color:transparent}
+
+.ex-sec{margin-top:52px}
+.ex-sec>h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;margin-bottom:6px}
+.ex-intro{color:var(--mut);margin:0 0 16px;max-width:62ch}
+
+/* Reparto (barra 100 % apilada) */
+.ex-reparto{margin:26px 0 0}
+.ex-reparto figcaption{font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.ex-segs{display:flex;gap:2px;height:58px}
+.ex-seg{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 10px;background:var(--c);color:#fff;text-decoration:none;overflow:hidden;white-space:nowrap;transition:filter .15s,transform .15s}
+.ex-seg:first-child{border-radius:6px 0 0 6px}.ex-seg:last-child{border-radius:0 6px 6px 0}
+.ex-seg b{font-family:"Bricolage Grotesque",sans-serif;font-size:1.15rem;line-height:1;color:#fff;text-shadow:0 1px 2px #0006}
+.ex-seg span{font-size:.72rem;font-weight:700;opacity:.95;text-shadow:0 1px 2px #0006;overflow:hidden;text-overflow:ellipsis}
+.ex-seg:hover,.ex-seg:focus-visible{filter:brightness(1.12);transform:translateY(-2px)}
+.ex-ley-bloques,.ex-ley-dom{display:flex;flex-wrap:wrap;gap:6px 16px;list-style:none;margin:10px 0 0;padding:0;font-size:.8rem;color:#ddd}
+.ex-ley-bloques i,.ex-ley-dom i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.ex-ley-bloques i{background:var(--c)}.ex-ley-dom i{background:var(--d)}
+.ex-ley-bloques b{color:var(--mut);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* Por dónde empezar */
+.ex-orden{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.ex-orden a{display:flex;gap:12px;align-items:flex-start;height:100%;padding:14px 16px;border-radius:18px;background:var(--bg2);border:1px solid var(--line);border-top:4px solid var(--c);color:#fff;text-decoration:none;transition:transform .15s,border-color .15s}
+.ex-orden a:hover{transform:translateY(-2px);border-color:#555;border-top-color:var(--c)}
+.ex-on{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--c);font-family:"Bricolage Grotesque",sans-serif;font-weight:800}
+.ex-orden b{display:block;font-size:.98rem;line-height:1.25}
+.ex-orden small{display:block;margin-top:4px;color:var(--mut);font-size:.8rem;line-height:1.3}
+
+/* Mapa del examen: treemap (área = probabilidad); dentro, un ladrillo por concepto. */
+.ex-treemap{position:relative;height:clamp(380px,52vw,520px)}
+.ex-bloque{position:absolute;left:var(--x);top:var(--y);width:var(--w);height:var(--h);padding:2px}
+.ex-bloque>*{position:relative}
+.ex-bloque::before{content:"";position:absolute;inset:2px;border-radius:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 30%,#111) 0%,#111 70%);border:1px solid color-mix(in srgb,var(--c) 55%,#111)}
+.ex-bloque{display:flex;flex-direction:column;gap:6px;padding:14px 14px 12px;overflow:hidden}
+.ex-bh{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.ex-rank{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:var(--c);font-size:.85rem;filter:brightness(1.35)}
+.ex-pct{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.4rem,3vw,2.3rem);line-height:1;font-variant-numeric:tabular-nums}
+.ex-bloque h4{font-size:1rem;line-height:1.15}
+.ex-bloque h4 a{color:#fff;text-decoration:none}
+.ex-bloque h4 a:hover{text-decoration:underline;text-underline-offset:3px}
+.ex-bdom{display:flex;align-items:center;gap:8px}
+.ex-bdom small{font-size:.74rem;color:var(--mut);line-height:1.2}
+.ex-ladrillos{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto}
+.ex-ladrillo{width:16px;height:16px;border-radius:4px;background:var(--d);box-shadow:inset 0 0 0 1px #ffffff22;transition:transform .12s}
+.ex-ladrillo:hover,.ex-ladrillo:focus-visible{transform:scale(1.35);box-shadow:0 0 0 2px #fff}
+.ex-ley-dom{margin-top:12px}
+
+/* Gráficos de barras horizontales: un solo eje por gráfico, etiquetas directas. */
+.ex-grafs{display:grid;grid-template-columns:1fr;gap:16px}
+.ex-graf{margin:0;min-width:0;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:18px 20px 14px}
+.ex-graf figcaption{margin-bottom:12px}
+.ex-graf h3{font-size:1.08rem}
+.ex-graf figcaption small{color:var(--mut);font-size:.8rem}
+.ex-plot{position:relative;display:grid;gap:8px}
+.ex-fila{display:grid;grid-template-columns:minmax(0,8.5em) 1fr;gap:12px;align-items:center;min-height:26px}
+.ex-et{font-size:.8rem;line-height:1.2;color:#ddd;text-align:right}
+.ex-pista{display:flex;align-items:center;gap:2px;height:14px;position:relative;margin-right:3em;border-radius:4px}
+.ex-barra{display:block;height:100%;flex:none;transform-origin:left center}
+.ex-barra:first-child{border-radius:4px 0 0 4px}
+.ex-barra:last-of-type{border-radius:0 4px 4px 0}
+.ex-barra.prob,.ex-barra.dom{background:var(--c);border-radius:0 4px 4px 0}
+.ex-barra.of{background:var(--ex-of)}
+.ex-barra.pr{background:var(--ex-pr)}
+.ex-val{font-size:.85rem;font-variant-numeric:tabular-nums;margin-left:8px;white-space:nowrap}
+.ex-pista:hover .ex-barra,.ex-barra:hover,[data-tip]:focus-visible{filter:brightness(1.18)}
+.ex-graf.rev .ex-barra{transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.8,.2,1) .15s}
+.ex-graf.rev.in .ex-barra{transform:none}
+/* Rejilla tenue detrás de las barras (alineada con el eje). */
+.ex-rejilla{position:absolute;top:0;bottom:0;left:calc(8.5em + 12px);right:3em;pointer-events:none}
+.ex-rejilla i{position:absolute;top:0;bottom:0;width:1px;background:#ffffff10}
+.ex-fila-eje{min-height:0;margin-top:4px}
+.ex-eje{position:relative;height:18px;margin-right:3em;border-top:1px solid var(--line)}
+.ex-eje span{position:absolute;top:3px;transform:translateX(-50%);font-size:.7rem;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ex-ley{display:flex;flex-wrap:wrap;gap:4px 14px;margin:-4px 0 10px;font-size:.78rem;color:#ddd}
+.ex-ley i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.ex-ley i.of{background:var(--ex-of)}.ex-ley i.pr{background:var(--ex-pr)}
+.ex-tip{position:absolute;z-index:20;max-width:300px;pointer-events:none;background:#fff;color:#000;border-radius:12px;padding:8px 12px;font-size:.82rem;line-height:1.35;box-shadow:0 8px 24px #0008}
+.ex-tip b{color:#000}
+.ex-tip span{color:#444}
+
+/* Tabla alternativa */
+.ex-tabla{margin-top:14px}
+.ex-tabla summary{cursor:pointer;color:var(--mut);font-size:.9rem}
+.ex-tw{overflow-x:auto;margin-top:8px}
+.ex-tabla table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+.ex-tabla th,.ex-tabla td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:right}
+.ex-tabla th[scope=row],.ex-tabla thead th:first-child{text-align:left;font-weight:700}
+
+/* Ficha de bloque */
+.ex-ficha{border-top:4px solid var(--c)}
+.ex-fh{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;margin-bottom:14px}
+.ex-fpct{display:grid;justify-items:center;min-width:86px}
+.ex-fpct b{font-family:"Bricolage Grotesque",sans-serif;font-size:2.6rem;line-height:1;color:var(--c);filter:brightness(1.3)}
+.ex-fpct b small{font-size:.5em;margin-left:2px}
+.ex-fpct span{font-size:.7rem;color:var(--mut);text-align:center;line-height:1.2;margin-top:4px}
+.ex-fh h2{font-size:clamp(1.25rem,3vw,1.6rem);font-weight:800}
+.ex-formato{color:var(--mut);margin:4px 0 0;font-size:.95rem}
+.ex-fdom{display:grid;justify-items:center;gap:2px}
+.ex-fdom small{font-size:.7rem;color:var(--mut)}
+.ex-ficha h5{margin:14px 0 8px;font-family:"Bricolage Grotesque",sans-serif;font-size:.9rem;letter-spacing:.06em;text-transform:uppercase;color:var(--y)}
+.ex-claves{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ex-claves li{position:relative;padding:10px 14px 10px 36px;background:#000;border:1px solid var(--line);border-radius:12px;font-size:.98rem;line-height:1.4}
+.ex-claves li::before{content:"✓";position:absolute;left:13px;top:10px;color:var(--c);font-weight:800;filter:brightness(1.35)}
+.ex-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.ex-chip{font-size:.78rem;line-height:1.25;color:#ddd;text-decoration:none;border-radius:999px;padding:4px 10px;background:#000;border:1px solid var(--line);border-left:4px solid var(--d)}
+.ex-chip:hover{color:#fff;border-color:#fff;border-left-color:var(--d)}
+.ex-marcador{color:var(--b)}
+
+@media (max-width:760px){
+  .ex-treemap{height:auto;display:grid;gap:6px}
+  .ex-bloque{position:relative;left:auto;top:auto;width:auto;height:auto;min-height:120px}
+  .ex-fila{grid-template-columns:minmax(0,7em) 1fr}
+  .ex-rejilla{left:calc(7em + 12px)}
+  .ex-fh{grid-template-columns:auto 1fr}
+  .ex-fdom{display:none}
+  .ex-segs{height:46px}
+  .ex-seg span{display:none}
+}
+
+/* Tarjeta de la portada que lleva a la predicción. */
+.home-examen{display:grid;gap:6px;margin:34px 0 8px;padding:22px 24px;border-radius:24px;background:linear-gradient(135deg,#1a1405,#111 60%);border:1px solid #ffd23f55;color:#fff;text-decoration:none;transition:transform .15s,border-color .15s}
+.home-examen:hover{transform:translateY(-3px);border-color:var(--y)}
+.he-k{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--y)}
+.home-examen b{font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.4rem,3.4vw,2rem);line-height:1.1}
+.he-t{color:var(--mut);max-width:58ch}
+.he-barras{display:flex;gap:2px;height:10px;margin-top:6px}
+.he-barras i{background:var(--y);opacity:.9;border-radius:2px}
+.he-barras i:nth-child(2){opacity:.75}.he-barras i:nth-child(3){opacity:.6}.he-barras i:nth-child(4){opacity:.45}.he-barras i:nth-child(5){opacity:.3}
+.he-ir{font-weight:800;color:var(--y);margin-top:4px}

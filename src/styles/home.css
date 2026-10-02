@@ -31,3 +31,44 @@
 .gram div{display:flex;gap:10px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:8px 10px;font-size:.92rem;line-height:1.2}
 .gram svg{width:40px;height:40px;flex:none}
 .next{margin-top:30px;color:var(--mut);font-size:.95rem;border-top:1px solid var(--line);padding-top:14px}
+
+/* Historia del proyecto: la ciudad 2D del prototipo, al final de la portada. */
+.historia{margin-top:56px;padding-top:26px;border-top:1px dashed var(--line)}
+.historia .h2{margin-top:10px}
+.historia-p{color:var(--mut);max-width:62ch;margin:0 0 6px}
+.historia .skyline{filter:sepia(.25) saturate(.9)}
+
+/* Línea de tiempo del tema: apartados en color, anchos por peso, subpuntos como paradas. */
+.tl{margin:34px 0 10px}
+.tl-encabezado p{color:var(--mut);margin:4px 0 18px;max-width:64ch;font-size:1rem}
+.tl-pista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px 10px;align-items:start}
+.tl-apartado{min-width:0;display:flex;flex-direction:column;gap:12px}
+/* Barra del tema: tramos por subpunto (ancho = peso), relleno = dominio. */
+.tl-barra{display:flex;gap:3px;height:34px;margin:0 0 18px}
+.tl-tramo{position:relative;min-width:6px;border-radius:5px;overflow:hidden;background:color-mix(in srgb,var(--c) 26%,transparent);box-shadow:inset 0 -3px 0 var(--c);text-decoration:none}
+.tl-tramo i{position:absolute;left:0;top:0;bottom:0;background:var(--c);opacity:.85}
+.tl-tramo span{position:relative;display:grid;place-items:center;height:100%;font-size:.72rem;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.7)}
+.tl-tramo:hover,.tl-tramo:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.tl-tramo.siguiente{outline:2px solid #fff;outline-offset:2px}
+.tl-cab{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 10px;align-items:baseline;padding:10px 12px;border-radius:12px 12px 0 0;border-bottom:4px solid var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.tl-num{grid-row:span 2;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:1.9rem;line-height:1;color:var(--c)}
+.tl-tit{font-weight:800;font-size:.98rem;line-height:1.2;color:var(--ink)}
+.tl-peso{font-size:.76rem;color:var(--mut)}
+.tl-paradas{list-style:none;margin:0;padding:0 0 0 14px;display:grid;gap:6px;position:relative}
+/* El tramo del apartado: una línea en su color que une las paradas. */
+.tl-paradas::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:3px;border-radius:2px;background:var(--c);opacity:.55}
+.tl-parada{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 8px;align-items:baseline;padding:6px 8px 6px 14px;border-radius:8px;text-decoration:none;color:var(--ink);transition:background .15s}
+.tl-parada:hover,.tl-parada:focus-visible{background:color-mix(in srgb,var(--c) 18%,transparent)}
+.tl-punto{position:absolute;left:-14px;top:9px;width:14px;height:14px;border-radius:50%;border:3px solid var(--c);background:var(--dom,transparent);box-sizing:border-box}
+.tl-parada b{font-variant-numeric:tabular-nums;color:var(--c);font-size:.86rem}
+.tl-nombre{font-weight:700;font-size:.9rem;line-height:1.25}
+.tl-parada small{grid-column:2;color:var(--mut);font-size:.74rem}
+.tl-parada.siguiente{background:color-mix(in srgb,var(--c) 22%,transparent);box-shadow:inset 0 0 0 1px var(--c)}
+.tl-parada.siguiente .tl-punto{animation:tl-late 1.6s ease-in-out infinite}
+.tl-parada.siguiente small::after{content:" · siguiente";color:var(--ink);font-weight:700}
+@keyframes tl-late{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 30%,transparent)}}
+@media (prefers-reduced-motion:reduce){.tl-parada.siguiente .tl-punto{animation:none}}
+/* En pantallas estrechas, los apartados se apilan (la línea sigue de arriba abajo). */
+@media (max-width:640px){
+  .tl-pista{grid-template-columns:1fr}
+}

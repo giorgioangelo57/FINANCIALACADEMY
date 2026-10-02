@@ -55,7 +55,20 @@ function tejado(tipo: EdificioCiudad['tejado'], x: number, top: number, w: numbe
 const ruina = (x: number, top: number) =>
   `<rect x="${x + 14}" y="${top - 1}" width="9" height="5" fill="#04060d"/><rect x="${x + 18}" y="${top + 3}" width="5" height="3" fill="#04060d"/><rect x="${x - 1}" y="${top - 1}" width="4" height="3" fill="#04060d"/>`;
 
-function edificio(tema: Tema, progreso: Progreso, e: EdificioCiudad, i: number): string {
+/** Altura (px) que ocupa cada remate por encima de la fachada. */
+const ALTO_TEJADO: Record<EdificioCiudad['tejado'], number> = {
+  fronton: 6, bandera: 12, granero: 6, cupula: 5, antena: 12, ruina: 1, plano: 0,
+};
+
+export interface OpcionesCiudadPixel {
+  /**
+   * Los iconos van en un letrero por encima del tejado en lugar de sobre la fachada. Es la vista de
+   * la app; `false` reproduce el prototipo original (lo usan los tests de paridad).
+   */
+  iconosSobreTejado?: boolean;
+}
+
+function edificio(tema: Tema, progreso: Progreso, e: EdificioCiudad, i: number, sobreTejado = false): string {
   const c = tema.conceptos.find((z) => z.id === e.conceptoId);
   if (!c) return '';
   const d = dominioConcepto(progreso, c.id);
@@ -70,11 +83,21 @@ function edificio(tema: Tema, progreso: Progreso, e: EdificioCiudad, i: number):
   b += `<rect x="${x}" y="${top}" width="${w}" height="${e.altura}" fill="#0f1320" stroke="${d > 0 ? color : '#2a3142'}" stroke-width="1"/>`;
   if (e.tejado === 'ruina') b += ruina(x, top);
   const icono = iconoSvg(c.iconos, c.color).replace(/^<svg[^>]*>|<\/svg>$/g, '');
-  b += `<rect x="${x + 2}" y="${top + 2}" width="18" height="18" fill="#000"/><svg x="${x + 3}" y="${top + 3}" width="16" height="16" viewBox="0 0 120 120">${icono}</svg>`;
+  if (sobreTejado) {
+    // Letrero: poste de 1 px desde el remate hasta el icono, que flota sobre el edificio.
+    const y = top - ALTO_TEJADO[e.tejado] - 20;
+    b += `<rect x="${x + 10}" y="${y + 18}" width="1" height="${top - ALTO_TEJADO[e.tejado] - y - 18}" fill="#666"/>`;
+    // Sin recuadro ni fondo: el icono se funde con el cielo (solo su anillo y su glifo).
+    const iconoCielo = icono.replace('fill="#121212"', 'fill="none"');
+    b += `<svg x="${x + 3}" y="${y + 1}" width="16" height="16" viewBox="0 0 120 120">${iconoCielo}</svg>`;
+  } else {
+    b += `<rect x="${x + 2}" y="${top + 2}" width="18" height="18" fill="#000"/><svg x="${x + 3}" y="${top + 3}" width="16" height="16" viewBox="0 0 120 120">${icono}</svg>`;
+  }
 
   // Ventanas: cuanto más dominio, más luces encendidas.
   const encendidas = d > 0 ? 0.25 + d * 0.7 : 0.18;
-  for (let wy = top + 23, fila = 0; wy <= 100; wy += 6, fila++) {
+  // Sin el icono en la fachada, las ventanas empiezan arriba.
+  for (let wy = top + (sobreTejado ? 4 : 23), fila = 0; wy <= 100; wy += 6, fila++) {
     for (let col = 0; col < 3; col++) {
       const on = pseudoAleatorio(i * 31 + fila, col) < encendidas;
       b += `<rect class="${on ? 'wf' : ''}" style="animation-delay:${(pseudoAleatorio(i, fila * 7 + col) * 5).toFixed(2)}s" x="${x + 3 + col * 6}" y="${wy}" width="4" height="3" fill="${on ? color : '#1b2130'}"/>`;
@@ -84,10 +107,10 @@ function edificio(tema: Tema, progreso: Progreso, e: EdificioCiudad, i: number):
   return b;
 }
 
-export function ciudadPixel(tema: Tema, progreso: Progreso): string {
+export function ciudadPixel(tema: Tema, progreso: Progreso, opciones: OpcionesCiudadPixel = {}): string {
   let o = cielo();
   tema.ciudad.edificios.forEach((e, i) => {
-    o += edificio(tema, progreso, e, i);
+    o += edificio(tema, progreso, e, i, opciones.iconosSobreTejado);
   });
   o += `<rect x="0" y="${SUELO}" width="${ANCHO}" height="10" fill="#000"/>`;
   return `<div class="skyline px"><svg viewBox="0 0 ${ANCHO} 120" shape-rendering="crispEdges">${o}</svg></div>`;

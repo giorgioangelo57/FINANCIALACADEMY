@@ -34,5 +34,38 @@ export function validarTema(tema: Tema): string[] {
     if (!conceptos.has(e.conceptoId)) errores.push(`Edificio: concepto inexistente ${e.conceptoId}`);
   }
 
+  const a = tema.ampliacion;
+  if (a) {
+    const suma = a.bloques.reduce((t, b) => t + b.probabilidad, 0);
+    if (suma !== 100) errores.push(`Bloques de examen: las probabilidades suman ${suma}, no 100`);
+    const enBloques = a.bloques.flatMap((b) => b.conceptoIds);
+    for (const id of duplicados(enBloques)) errores.push(`Concepto en dos bloques: ${id}`);
+    for (const c of tema.conceptos) if (!enBloques.includes(c.id)) errores.push(`Concepto sin bloque de examen: ${c.id}`);
+    for (const id of enBloques) if (!conceptos.has(id)) errores.push(`Bloque: concepto inexistente ${id}`);
+    for (const id of duplicados(a.preguntas.map((p) => p.id))) errores.push(`Pregunta duplicada: ${id}`);
+    for (const p of a.preguntas) {
+      if (!conceptos.has(p.conceptoId)) errores.push(`Pregunta ${p.id}: concepto inexistente`);
+      if (!Number.isInteger(p.indiceCorrecta) || p.indiceCorrecta < 0 || p.indiceCorrecta >= p.opciones.length) errores.push(`Pregunta ${p.id}: respuesta fuera de rango`);
+      if (new Set(p.opciones).size !== p.opciones.length) errores.push(`Pregunta ${p.id}: opciones repetidas`);
+    }
+    for (const f of a.flashcards) if (!conceptos.has(f.conceptoId)) errores.push(`Flashcard ${f.id}: concepto inexistente`);
+    for (const e of a.esquemas) if (!conceptos.has(e.conceptoId)) errores.push(`Esquema ${e.titulo}: concepto inexistente`);
+    const idsInfo = new Set<string>();
+    for (const i of a.infografias ?? []) {
+      if (idsInfo.has(i.id)) errores.push(`Infografía ${i.id}: id repetido`);
+      idsInfo.add(i.id);
+      for (const c of i.conceptoIds) if (!conceptos.has(c)) errores.push(`Infografía ${i.id}: concepto inexistente ${c}`);
+      const actores = new Set(i.actores.map((x) => x.id));
+      for (const x of i.actores) if (x.x < 0 || x.x > 100 || x.y < 0 || x.y > 100) errores.push(`Infografía ${i.id}: actor ${x.id} fuera del lienzo`);
+      for (const f of i.flujos) if (!actores.has(f.desde) || !actores.has(f.hacia)) errores.push(`Infografía ${i.id}: flujo con actor inexistente (${f.desde} → ${f.hacia})`);
+      if (!i.pasos.length) errores.push(`Infografía ${i.id}: sin pasos`);
+      i.pasos.forEach((p, k) => {
+        for (const id of p.actores) if (!actores.has(id)) errores.push(`Infografía ${i.id}, paso ${k + 1}: actor inexistente ${id}`);
+        for (const n of p.flujos) if (!i.flujos[n]) errores.push(`Infografía ${i.id}, paso ${k + 1}: flujo ${n} inexistente`);
+        for (const n of p.grupos ?? []) if (!i.grupos?.[n]) errores.push(`Infografía ${i.id}, paso ${k + 1}: grupo ${n} inexistente`);
+      });
+    }
+  }
+
   return errores;
 }
